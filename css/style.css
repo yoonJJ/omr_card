@@ -123,14 +123,34 @@ h1 {
     font-size: 16px;
 }
 
-.answer-input {
-    width: 60px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+.choice-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
     margin-right: 10px;
-    text-align: center;
-    font-size: 16px;
+}
+
+.choice-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #2196F3;
+    border-radius: 5px;
+    background-color: white;
+    color: #2196F3;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.choice-btn:hover {
+    background-color: #e3f2fd;
+}
+
+.choice-btn.selected {
+    background-color: #2196F3;
+    color: white;
 }
 
 .checkboxes {
@@ -180,6 +200,45 @@ h1 {
     .score-section {
         position: static;
         margin-bottom: 30px;
+    }
+
+    .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .question-number {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .choice-buttons {
+        width: 100%;
+        justify-content: flex-start;
+        margin-right: 0;
+    }
+
+    .choice-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .checkboxes {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+    }
+
+    .checkbox-group label {
+        font-size: 18px;
     }
 }
 

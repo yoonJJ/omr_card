@@ -17,12 +17,28 @@ function createQuestion(subjectNum, questionNum) {
     questionDiv.innerHTML = `
         <div class="question-header">
             <span class="question-number">${questionNum}번</span>
-            <input type="number" 
-                   class="answer-input" 
-                   id="answer_${subjectNum}_${questionNum}" 
-                   placeholder="정답"
-                   min="0"
-                   max="999">
+            <div class="choice-buttons">
+                <button type="button" class="choice-btn" 
+                        data-choice="1"
+                        data-subject="${subjectNum}"
+                        data-question="${questionNum}"
+                        id="choice_${subjectNum}_${questionNum}_1">1</button>
+                <button type="button" class="choice-btn" 
+                        data-choice="2"
+                        data-subject="${subjectNum}"
+                        data-question="${questionNum}"
+                        id="choice_${subjectNum}_${questionNum}_2">2</button>
+                <button type="button" class="choice-btn" 
+                        data-choice="3"
+                        data-subject="${subjectNum}"
+                        data-question="${questionNum}"
+                        id="choice_${subjectNum}_${questionNum}_3">3</button>
+                <button type="button" class="choice-btn" 
+                        data-choice="4"
+                        data-subject="${subjectNum}"
+                        data-question="${questionNum}"
+                        id="choice_${subjectNum}_${questionNum}_4">4</button>
+            </div>
             <div class="checkboxes">
                 <div class="checkbox-group">
                     <input type="checkbox" 
@@ -55,21 +71,45 @@ for (let subject = 1; subject <= SUBJECTS; subject++) {
     }
 }
 
+// 선택지 버튼 클릭 시 처리
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('choice-btn')) {
+        const subject = e.target.dataset.subject;
+        const question = e.target.dataset.question;
+        const choice = e.target.dataset.choice;
+        
+        // 같은 문제의 다른 버튼들 비활성화
+        for (let i = 1; i <= 4; i++) {
+            const btn = document.getElementById(`choice_${subject}_${question}_${i}`);
+            if (btn) {
+                btn.classList.remove('selected');
+            }
+        }
+        
+        // 선택한 버튼 활성화
+        e.target.classList.add('selected');
+    }
+});
+
 // 맞음/틀림 체크박스 상호 배타적 처리
-document.querySelectorAll('.correct-checkbox, .wrong-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
-        const subject = this.dataset.subject;
-        const question = this.dataset.question;
-        const isCorrect = this.classList.contains('correct-checkbox');
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('correct-checkbox') || e.target.classList.contains('wrong-checkbox')) {
+        const subject = e.target.dataset.subject;
+        const question = e.target.dataset.question;
+        const isCorrect = e.target.classList.contains('correct-checkbox');
         const otherCheckbox = document.getElementById(
             isCorrect ? `wrong_${subject}_${question}` : `correct_${subject}_${question}`
         );
 
-        if (this.checked) {
-            otherCheckbox.checked = false;
+        if (e.target.checked) {
+            if (otherCheckbox) {
+                otherCheckbox.checked = false;
+            }
+            calculateScore();
+        } else {
             calculateScore();
         }
-    });
+    }
 });
 
 // 점수 계산 함수
