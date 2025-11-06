@@ -24,6 +24,30 @@ h1 {
     color: #333;
 }
 
+.score-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+    z-index: 1000;
+    display: none;
+}
+
+.score-toggle-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
 .score-section {
     position: fixed;
     top: 20px;
@@ -33,12 +57,54 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     min-width: 250px;
+    z-index: 999;
+    transition: transform 0.3s, opacity 0.3s;
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.score-section.hidden {
+    transform: translateX(120%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .score-section h2 {
     font-size: 18px;
-    margin-bottom: 15px;
     color: #333;
+    margin: 0;
+}
+
+.score-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.score-close-btn:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.score-content {
+    display: block;
 }
 
 .score-item {
@@ -197,9 +263,22 @@ h1 {
         grid-template-columns: 1fr;
     }
 
+    .score-toggle-btn {
+        position: static;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
     .score-section {
         position: static;
         margin-bottom: 30px;
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .score-section.hidden {
+        display: none;
     }
 
     .question-header {

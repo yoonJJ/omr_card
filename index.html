@@ -7,25 +7,31 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="score-section">
-        <h2>점수 현황</h2>
-        <div class="score-item subject">
-            <span>과목 1:</span>
-            <span id="score1">0점</span>
+    <button class="score-toggle-btn" id="scoreToggleBtn">점수 현황 열기</button>
+    <div class="score-section" id="scoreSection">
+        <div class="score-header">
+            <h2>점수 현황</h2>
+            <button class="score-close-btn" id="scoreCloseBtn">×</button>
         </div>
-        <div class="score-item subject">
-            <span>과목 2:</span>
-            <span id="score2">0점</span>
+        <div class="score-content">
+            <div class="score-item subject">
+                <span>과목 1:</span>
+                <span id="score1">0점</span>
+            </div>
+            <div class="score-item subject">
+                <span>과목 2:</span>
+                <span id="score2">0점</span>
+            </div>
+            <div class="score-item subject">
+                <span>과목 3:</span>
+                <span id="score3">0점</span>
+            </div>
+            <div class="score-item total">
+                <span>평균:</span>
+                <span id="average">0점</span>
+            </div>
+            <div id="result" class="result" style="display:none;"></div>
         </div>
-        <div class="score-item subject">
-            <span>과목 3:</span>
-            <span id="score3">0점</span>
-        </div>
-        <div class="score-item total">
-            <span>평균:</span>
-            <span id="average">0점</span>
-        </div>
-        <div id="result" class="result" style="display:none;"></div>
     </div>
 
     <div class="container">

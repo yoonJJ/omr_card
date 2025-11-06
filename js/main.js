@@ -160,3 +160,29 @@ function checkResult() {
 // 초기 점수 계산
 calculateScore();
 
+// 점수 현황 토글 기능
+const scoreSection = document.getElementById('scoreSection');
+const scoreToggleBtn = document.getElementById('scoreToggleBtn');
+const scoreCloseBtn = document.getElementById('scoreCloseBtn');
+
+// 점수 현황 열기
+function openScoreSection() {
+    scoreSection.classList.remove('hidden');
+    scoreToggleBtn.style.display = 'none';
+}
+
+// 점수 현황 닫기
+function closeScoreSection() {
+    scoreSection.classList.add('hidden');
+    scoreToggleBtn.style.display = 'block';
+}
+
+// 토글 버튼 클릭 시
+scoreToggleBtn.addEventListener('click', openScoreSection);
+
+// 닫기 버튼 클릭 시
+scoreCloseBtn.addEventListener('click', closeScoreSection);
+
+// 초기 상태: 점수 현황 열림 상태로 시작
+openScoreSection();
+
