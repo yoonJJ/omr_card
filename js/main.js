@@ -1,43 +1,58 @@
-const QUESTIONS_PER_SUBJECT = 20;
-const SUBJECTS = 3;
-const PASS_THRESHOLD = 70; // 평균 합격 기준
-const MIN_SUBJECT_SCORE = 40; // 과목별 최소 점수 (과락 기준)
+const DEFAULT_QUESTIONS_PER_SUBJECT = 20;
+const DEFAULT_SUBJECTS = 3;
+const DEFAULT_PASS_THRESHOLD = 70; // 평균 합격 기준
+const DEFAULT_MIN_SUBJECT_SCORE = 40; // 과목별 최소 점수 (과락 기준)
+const DEFAULT_CHOICES_PER_QUESTION = 4;
+
+function clampNumber(value, min, max, fallback) {
+    const n = Number(value);
+    if (Number.isNaN(n)) return fallback;
+    return Math.min(max, Math.max(min, n));
+}
+
+function getConfig() {
+    const params = new URLSearchParams(window.location.search);
+    const subjects = clampNumber(params.get('subjects'), 1, 10, DEFAULT_SUBJECTS);
+    const questionsPerSubject = clampNumber(params.get('questions'), 1, 200, DEFAULT_QUESTIONS_PER_SUBJECT);
+    const passThreshold = clampNumber(params.get('pass'), 0, 100, DEFAULT_PASS_THRESHOLD);
+    const minSubjectScore = clampNumber(params.get('min'), 0, 100, DEFAULT_MIN_SUBJECT_SCORE);
+    const choicesPerQuestion = clampNumber(params.get('choices'), 2, 8, DEFAULT_CHOICES_PER_QUESTION);
+
+    return {
+        subjects,
+        passThreshold,
+        minSubjectScore,
+        choicesPerQuestion,
+        questionsPerSubject
+    };
+}
+
+const CONFIG = getConfig();
 
 // 각 과목별 점수 저장
-const scores = {
-    1: 0,
-    2: 0,
-    3: 0
-};
+const scores = {};
 
 // 문제 생성 함수
 function createQuestion(subjectNum, questionNum) {
     const questionDiv = document.createElement('div');
     questionDiv.className = 'question-item';
+    const buttons = Array.from({ length: CONFIG.choicesPerQuestion }, (_, idx) => idx + 1)
+        .map((choice) => {
+            return `
+                <button type="button" class="choice-btn"
+                        data-choice="${choice}"
+                        data-subject="${subjectNum}"
+                        data-question="${questionNum}"
+                        id="choice_${subjectNum}_${questionNum}_${choice}">${choice}</button>
+            `;
+        })
+        .join('');
+
     questionDiv.innerHTML = `
         <div class="question-header">
             <span class="question-number">${questionNum}번</span>
             <div class="choice-buttons">
-                <button type="button" class="choice-btn" 
-                        data-choice="1"
-                        data-subject="${subjectNum}"
-                        data-question="${questionNum}"
-                        id="choice_${subjectNum}_${questionNum}_1">1</button>
-                <button type="button" class="choice-btn" 
-                        data-choice="2"
-                        data-subject="${subjectNum}"
-                        data-question="${questionNum}"
-                        id="choice_${subjectNum}_${questionNum}_2">2</button>
-                <button type="button" class="choice-btn" 
-                        data-choice="3"
-                        data-subject="${subjectNum}"
-                        data-question="${questionNum}"
-                        id="choice_${subjectNum}_${questionNum}_3">3</button>
-                <button type="button" class="choice-btn" 
-                        data-choice="4"
-                        data-subject="${subjectNum}"
-                        data-question="${questionNum}"
-                        id="choice_${subjectNum}_${questionNum}_4">4</button>
+                ${buttons}
             </div>
             <div class="checkboxes">
                 <div class="checkbox-group">
@@ -62,12 +77,48 @@ function createQuestion(subjectNum, questionNum) {
     return questionDiv;
 }
 
-// 문제들 생성
-for (let subject = 1; subject <= SUBJECTS; subject++) {
-    const questionsContainer = document.getElementById(`questions${subject}`);
-    for (let question = 1; question <= QUESTIONS_PER_SUBJECT; question++) {
-        const questionElement = createQuestion(subject, question);
-        questionsContainer.appendChild(questionElement);
+function createSubjectSection(subjectNum) {
+    const section = document.createElement('div');
+    section.className = 'subject-section';
+    section.dataset.subject = String(subjectNum);
+    section.innerHTML = `
+        <div class="subject-title">과목 ${subjectNum}</div>
+        <div class="questions-grid" id="questions${subjectNum}"></div>
+    `;
+    return section;
+}
+
+function createScoreItem(subjectNum) {
+    const row = document.createElement('div');
+    row.className = 'score-item subject';
+    row.innerHTML = `
+        <span>과목 ${subjectNum}:</span>
+        <span id="score${subjectNum}">0점</span>
+    `;
+    return row;
+}
+
+function initPage() {
+    const subjectsContainer = document.getElementById('subjectsContainer');
+    const scoresContainer = document.getElementById('scoresContainer');
+
+    // 다른 페이지에서 main.js가 로드되더라도 안전하게 종료
+    if (!subjectsContainer || !scoresContainer) return;
+
+    // 초기화
+    subjectsContainer.innerHTML = '';
+    scoresContainer.innerHTML = '';
+
+    for (let subject = 1; subject <= CONFIG.subjects; subject++) {
+        scores[subject] = 0;
+
+        scoresContainer.appendChild(createScoreItem(subject));
+        subjectsContainer.appendChild(createSubjectSection(subject));
+
+        const questionsContainer = document.getElementById(`questions${subject}`);
+        for (let question = 1; question <= CONFIG.questionsPerSubject; question++) {
+            questionsContainer.appendChild(createQuestion(subject, question));
+        }
     }
 }
 
@@ -79,7 +130,7 @@ document.addEventListener('click', function(e) {
         const choice = e.target.dataset.choice;
         
         // 같은 문제의 다른 버튼들 비활성화
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= CONFIG.choicesPerQuestion; i++) {
             const btn = document.getElementById(`choice_${subject}_${question}_${i}`);
             if (btn) {
                 btn.classList.remove('selected');
@@ -114,23 +165,26 @@ document.addEventListener('change', function(e) {
 
 // 점수 계산 함수
 function calculateScore() {
-    for (let subject = 1; subject <= SUBJECTS; subject++) {
+    for (let subject = 1; subject <= CONFIG.subjects; subject++) {
         let correctCount = 0;
-        for (let question = 1; question <= QUESTIONS_PER_SUBJECT; question++) {
+        for (let question = 1; question <= CONFIG.questionsPerSubject; question++) {
             const correctCheckbox = document.getElementById(`correct_${subject}_${question}`);
             if (correctCheckbox && correctCheckbox.checked) {
                 correctCount++;
             }
         }
-        // 각 문제는 5점 (100점 만점 / 20문제)
-        scores[subject] = correctCount * 5;
-        document.getElementById(`score${subject}`).textContent = `${scores[subject]}점`;
+        // 100점 만점 기준으로 문항당 점수 계산
+        const pointsPerQuestion = 100 / CONFIG.questionsPerSubject;
+        scores[subject] = correctCount * pointsPerQuestion;
+        const scoreEl = document.getElementById(`score${subject}`);
+        if (scoreEl) scoreEl.textContent = `${scores[subject].toFixed(1)}점`;
     }
 
     // 평균 계산
-    const total = scores[1] + scores[2] + scores[3];
-    const average = total / SUBJECTS;
-    document.getElementById('average').textContent = `${average.toFixed(1)}점`;
+    const total = Object.values(scores).reduce((sum, v) => sum + v, 0);
+    const average = total / CONFIG.subjects;
+    const avgEl = document.getElementById('average');
+    if (avgEl) avgEl.textContent = `${average.toFixed(1)}점`;
 
     // 결과 판정
     checkResult();
@@ -142,13 +196,13 @@ function checkResult() {
     resultDiv.style.display = 'block';
 
     // 과락 체크 (한 과목이라도 40점 이하면 과락)
-    const hasFail = Object.values(scores).some(score => score < MIN_SUBJECT_SCORE);
-    const average = (scores[1] + scores[2] + scores[3]) / SUBJECTS;
+    const hasFail = Object.values(scores).some(score => score < CONFIG.minSubjectScore);
+    const average = Object.values(scores).reduce((sum, v) => sum + v, 0) / CONFIG.subjects;
 
     if (hasFail) {
-        resultDiv.textContent = '과락 (40점 미만 과목 존재)';
+        resultDiv.textContent = `과락 (${CONFIG.minSubjectScore}점 미만 과목 존재)`;
         resultDiv.className = 'result fail';
-    } else if (average >= PASS_THRESHOLD) {
+    } else if (average >= CONFIG.passThreshold) {
         resultDiv.textContent = '합격';
         resultDiv.className = 'result pass';
     } else {
@@ -157,7 +211,8 @@ function checkResult() {
     }
 }
 
-// 초기 점수 계산
+// 초기 렌더/점수 계산
+initPage();
 calculateScore();
 
 // 점수 현황 토글 기능

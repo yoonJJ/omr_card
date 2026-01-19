@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>컴퓨터활용능력 - OMR 시험지</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="index.html" class="back-btn">← 메인으로</a>
+    <a href="generator.html" class="back-btn secondary">⚙️ 문제 생성</a>
+    <button class="score-toggle-btn" id="scoreToggleBtn">점수 현황 열기</button>
+    <div class="score-section" id="scoreSection">
+        <div class="score-header">
+            <h2>점수 현황</h2>
+            <button class="score-close-btn" id="scoreCloseBtn">×</button>
+        </div>
+        <div class="score-content">
+            <div id="scoresContainer"></div>
+            <div class="score-item total">
+                <span>평균:</span>
+                <span id="average">0점</span>
+            </div>
+            <div id="result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>컴퓨터활용능력 OMR CARD</h1>
+        <div id="subjectsContainer"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

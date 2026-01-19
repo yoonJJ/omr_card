@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMR 문제 생성</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="index.html" class="back-btn">← 메인으로</a>
+
+    <div class="container">
+        <h1>OMR 문제 생성</h1>
+
+        <div class="generator-card">
+            <div class="generator-grid">
+                <div class="field">
+                    <label for="subjectsInput">과목 수</label>
+                    <div class="inline-controls">
+                        <button type="button" class="step-btn" id="subjectsMinusBtn" aria-label="과목 수 줄이기">−</button>
+                        <input id="subjectsInput" type="number" min="1" max="10" value="1" inputmode="numeric" />
+                        <button type="button" class="step-btn" id="subjectsPlusBtn" aria-label="과목 수 늘리기">+</button>
+                    </div>
+                    <div class="field-help">최소 1과목 (최대 10과목)</div>
+                </div>
+
+                <div class="field">
+                    <label for="questionsInput">과목당 문제 개수</label>
+                    <input id="questionsInput" type="number" min="1" max="200" value="20" inputmode="numeric" />
+                    <div class="field-help">각 과목에 동일하게 적용됩니다 (최대 200문항)</div>
+                </div>
+
+                <div class="field">
+                    <label for="passInput">합격점수(평균)</label>
+                    <input id="passInput" type="number" min="0" max="100" value="70" inputmode="numeric" />
+                    <div class="field-help">예: 70점 이상 합격</div>
+                </div>
+
+                <div class="field">
+                    <label for="minSubjectInput">과락점수(과목별)</label>
+                    <input id="minSubjectInput" type="number" min="0" max="100" value="40" inputmode="numeric" />
+                    <div class="field-help">예: 한 과목이라도 40점 미만이면 과락</div>
+                </div>
+
+                <div class="field">
+                    <label for="choicesInput">보기 개수</label>
+                    <input id="choicesInput" type="number" min="2" max="8" value="4" inputmode="numeric" />
+                    <div class="field-help">최소 2개 (최대 8개)</div>
+                </div>
+            </div>
+
+            <div class="generator-actions">
+                <button type="button" class="primary-btn" id="generateBtn">생성하기</button>
+                <div class="generator-preview" id="previewText"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/generator.js"></script>
+</body>
+</html>
+

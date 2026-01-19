@@ -3,56 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMR 시험지</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>OMR 시험지 - 메인</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-    <button class="score-toggle-btn" id="scoreToggleBtn">점수 현황 열기</button>
-    <div class="score-section" id="scoreSection">
-        <div class="score-header">
-            <h2>점수 현황</h2>
-            <button class="score-close-btn" id="scoreCloseBtn">×</button>
-        </div>
-        <div class="score-content">
-            <div class="score-item subject">
-                <span>과목 1:</span>
-                <span id="score1">0점</span>
+    <div class="main-container">
+        <div class="panel">
+            <div class="header">
+                <div class="eyebrow">OMR BUILDER</div>
+                <h1>OMR 시험지</h1>
+                <p>과목 수, 합격/과락 점수, 보기 개수를 설정하고 OMR 카드를 바로 생성하세요.</p>
             </div>
-            <div class="score-item subject">
-                <span>과목 2:</span>
-                <span id="score2">0점</span>
+
+            <div class="exam-list">
+                <a href="generator.html" class="exam-card primary">
+                    <div class="card-title">문제 생성 시작</div>
+                    <div class="card-desc">설정값 입력 → OMR 카드 자동 생성</div>
+                    <div class="card-action">시작하기 →</div>
+                </a>
             </div>
-            <div class="score-item subject">
-                <span>과목 3:</span>
-                <span id="score3">0점</span>
-            </div>
-            <div class="score-item total">
-                <span>평균:</span>
-                <span id="average">0점</span>
-            </div>
-            <div id="result" class="result" style="display:none;"></div>
+
+            <div class="footer-note">별도 저장 없이 브라우저에서 바로 사용합니다.</div>
         </div>
     </div>
-
-    <div class="container">
-        <h1>OMR 시험지</h1>
-
-        <div class="subject-section" data-subject="1">
-            <div class="subject-title">과목 1</div>
-            <div class="questions-grid" id="questions1"></div>
-        </div>
-
-        <div class="subject-section" data-subject="2">
-            <div class="subject-title">과목 2</div>
-            <div class="questions-grid" id="questions2"></div>
-        </div>
-
-        <div class="subject-section" data-subject="3">
-            <div class="subject-title">과목 3</div>
-            <div class="questions-grid" id="questions3"></div>
-        </div>
-    </div>
-
-    <script src="js/main.js"></script>
 </body>
 </html>
